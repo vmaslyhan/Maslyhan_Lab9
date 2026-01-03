@@ -1,0 +1,31 @@
+services:
+  db:
+    image: postgres:15
+    container_name: supply_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: supply_user
+      POSTGRES_PASSWORD: supply_pass
+      POSTGRES_DB: supply_db
+    volumes:
+      - ./supplydata:/var/lib/postgresql/data
+
+  pgadmin:
+    image: dpage/pgadmin4
+    container_name: supply_pgadmin
+    ports:
+      - "8080:80"
+    environment:
+      PGADMIN_DEFAULT_EMAIL: admin@admin.com
+      PGADMIN_DEFAULT_PASSWORD: admin123
+
+  python:
+    image: python:3.11
+    container_name: supply_python
+    depends_on:
+      - db
+    volumes:
+      - .:/app
+    working_dir: /app
+    command: tail -f /dev/null
